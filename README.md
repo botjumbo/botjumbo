@@ -5,4 +5,6 @@ descargar librerias pandas, selenium, datetime, openpyxl, re, xlwings , time
 descargar driver de chrome. https://chromedriver.chromium.org/downloads
 
 
+https://www.indec.gob.ar/ftp/cuadros/sociedad/EPH_metodologia_22_pobreza.pdf para ver como mide indec
+
 
