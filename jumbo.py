@@ -167,6 +167,7 @@ workbook.save("DatosJumbo.xlsx")
 
 
 ############################
+#aca abre excel DatosJumbo .. configurar a gusto
 wb = xw.Book('DatosJumbo.xlsx')
 sheet1 = wb.sheets['Real']
 sheet2 = wb.sheets['Consumo']
