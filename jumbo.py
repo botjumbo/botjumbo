@@ -14,7 +14,7 @@ fecha_actual = datetime.now().strftime('%d-%m-%Y')
 
 
 urls = [
-    "https://www.jumbo.com.ar/pan-lomitero-m-2/p",
+    "https://www.jumbo.com.ar/pan-de-viena-la-panerita-x-6-un/p",
     "https://www.jumbo.com.ar/galletitas-minipolvorita-vainilla-frutilla-152g/p",
     "https://www.jumbo.com.ar/galletitas-de-agua-traviata-303-gr/p",
     "https://www.jumbo.com.ar/harina-integral-100pureza-1-kg/p",
@@ -54,7 +54,7 @@ urls = [
     "https://www.jumbo.com.ar/batata-por-kg/p",
     "https://www.jumbo.com.ar/papa-negra-por-kg/p",
     "https://www.jumbo.com.ar/acelga-green-life-550-gr/p",
-    "https://www.jumbo.com.ar/cebolla-por-kg/p",
+    "https://www.jumbo.com.ar/cebolla-superior-por-kg/p",
     "https://www.jumbo.com.ar/choclo-x-unidad/p",
     "https://www.jumbo.com.ar/lechuga-capuchina-por-kg/p",
     "https://www.jumbo.com.ar/tomate-redondo-grande-por-kg/p",
@@ -89,8 +89,8 @@ columna = 2
 fila_titulos = 1
 columna_titulos = 2
 
-# Especifica la ruta del perfil de Chrome personalizado
-profile_directory = 'C:\\Users\\"AQUITUUSUARIO"\\AppData\\Local\\Google\\Chrome\\User Data\\'
+# Especifica la ruta del perfil de Chrome 
+profile_directory = 'C:\\Users\\"AQUI"\\AppData\\Local\\Google\\Chrome\\User Data\\'
 
 # Configurar el driver de Selenium con el perfil personalizado
 options = webdriver.ChromeOptions()
@@ -111,7 +111,10 @@ for url in urls:
         continue
     try:
         #Obtener el precio
-        precios = driver.find_elements(By.XPATH, "//div[contains(@class, 'vtex-flex-layout-0-x-flexColChild--separator') and .//div[contains(text(), 'espacio')]]//div[contains(@class, 'jumboargentinaio-store-theme-1dCOMij_MzTzZOCohX1K7w')]")
+        #precio de lista
+        precios = driver.find_elements(By.XPATH, "//div[contains(@class, 'vtex-flex-layout-0-x-flexColChild--separator') and .//div[contains(text(), 'espacio')]]//span[contains(@class, 'jumboargentinaio-store-theme-1QiyQadHj-1_x9js9EXUYK')]")
+        #precio con descuentos
+        #precios = driver.find_elements(By.XPATH, "//div[contains(@class, 'vtex-flex-layout-0-x-flexColChild--separator') and .//div[contains(text(), 'espacio')]]//div[contains(@class, 'jumboargentinaio-store-theme-1dCOMij_MzTzZOCohX1K7w')]")
 
         for precio in precios:
             precio_texto = precio.get_attribute("innerText")
@@ -123,7 +126,6 @@ for url in urls:
             continue
 
     if precio_texto:
-        #Si encuentra precios por el primer XPATH de precios
         try:
 
             precio = re.search(r'(?<=\$)[\d,.]+', precio_texto)
@@ -141,7 +143,7 @@ for url in urls:
 
 
 
-#Cerramos navegador
+
 driver.quit()
 
 
@@ -152,31 +154,25 @@ while sheet[f"A{fila_vacia}"].value is not None:
 #agregar fecha
 sheet[f"A{fila_vacia}"] = fecha_actual
 
-#agregar precios
+
 for _, precio in titulos_precios:
     sheet.cell(row=fila_vacia, column=columna).value = precio
     columna += 1  
 
-#agregar titulo
 for  titulo, _ in titulos_precios:
 
     sheet.cell(row=fila_titulos, column=columna_titulos).value = titulo
     columna_titulos += 1  
+
+
+
 # Guardar el libro de trabajo datos
 workbook.save("DatosJumbo.xlsx") 
-
-
 ############################
-#aca abre excel DatosJumbo .. configurar a gusto
-wb = xw.Book('DatosJumbo.xlsx')
-sheet1 = wb.sheets['Real']
-sheet2 = wb.sheets['Consumo']
-acumulada = round(((sheet1.range('BP2').value)*100),2)
-consumo = round(((sheet2.range('BN6').value)*100),2)
-inflamensual = round(((sheet2.range('BO6').value)*100),2)
-print("La Variacion de la canasta basica al dia de hoy " + fecha_actual + " es: " + str(acumulada)+ " %")
-print("La Variacion de la canasta basica por consumo al dia de hoy " + fecha_actual + " es: " + str(consumo)+ " %")
-print("La inflación proyectada mensual es: " + str(inflamensual)+ " %")
 
-##########################
 
+
+#https://www.jumbo.com.ar/queso-crema-la-paulina-alioli-250g/p
+#https://www.jumbo.com.ar/margarina-vegetal-danica-200g/p
+#https://www.jumbo.com.ar/vino-toro-clasico-tinto-1125cc/p
+#https://www.jumbo.com.ar/osobuco-de-novillo/p
