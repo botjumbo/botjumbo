@@ -52,7 +52,7 @@ urls = [
     "https://www.jumbo.com.ar/banana-ecuador-por-kg/p",
     "https://www.jumbo.com.ar/pera-por-kg/p",
     "https://www.jumbo.com.ar/batata-por-kg/p",
-    "https://www.jumbo.com.ar/papa-negra-por-kg/p",
+    "https://www.jumbo.com.ar/papa-fraccionada-por-kg/p",
     "https://www.jumbo.com.ar/acelga-green-life-550-gr/p",
     "https://www.jumbo.com.ar/cebolla-superior-por-kg/p",
     "https://www.jumbo.com.ar/choclo-x-unidad/p",
@@ -75,7 +75,7 @@ urls = [
     "https://www.jumbo.com.ar/soda-sifon-saldan-2-l/p",
     "https://www.jumbo.com.ar/cerveza-quilmes-clasica-retornable-1-l/p",
     "https://www.jumbo.com.ar/vino-tinto-vinas-de-balbo-borgona-1-125-cc/p",
-    "https://www.jumbo.com.ar/cafe-dolca-original-nescafe-170-gr/p",
+    "https://www.jumbo.com.ar/cafe-dolca-suave-nescafe-170-gr-3/p",
     "https://www.jumbo.com.ar/yerba-mate-suave-playadito-500-gr/p",
     "https://www.jumbo.com.ar/te-naturalidad-intacta-la-virginia-50-saquitos/p"
 ]
@@ -89,8 +89,8 @@ columna = 2
 fila_titulos = 1
 columna_titulos = 2
 
-# Especifica la ruta del perfil de Chrome 
-profile_directory = 'C:\\Users\\"AQUI"\\AppData\\Local\\Google\\Chrome\\User Data\\'
+# Especifica la ruta del perfil de Chrome personalizado
+profile_directory = 'C:\\Users\\"TuUsuario\\AppData\\Local\\Google\\Chrome\\User Data\\'
 
 # Configurar el driver de Selenium con el perfil personalizado
 options = webdriver.ChromeOptions()
@@ -101,45 +101,54 @@ driver = webdriver.Chrome(service=service, options=options)
 # Iterar sobre las URLs
 for url in urls:
     try:
-        # Obtener el titulo
+    #Averiguar si hay stock
         driver.get(url)
         time.sleep(5)
         titulo = driver.find_element(By.XPATH, "//h1[@class='vtex-store-components-3-x-productNameContainer mv0 t-heading-4']/span[@class='vtex-store-components-3-x-productBrand ']").text.strip()
+        stock  = driver.find_element(By.XPATH, "//div[contains(@class, 'vtex-flex-layout-0-x-flexColChild')]//p[contains(@class, 'vtex-outOfStockFlag__text')]").text.strip() 
+        if stock == "Producto sin stock":
+            titulos_precios.append((titulo,0)) #si no hay stock agrego el precio como 0
+            print(titulo,0)
     except NoSuchElementException:
-        print("No se encontro el Titulo en la página")
-        titulos_precios.append(("Producto X", 0))
-        continue
-    try:
-        #Obtener el precio
-        #precio de lista
-        precios = driver.find_elements(By.XPATH, "//div[contains(@class, 'vtex-flex-layout-0-x-flexColChild--separator') and .//div[contains(text(), 'espacio')]]//span[contains(@class, 'jumboargentinaio-store-theme-1QiyQadHj-1_x9js9EXUYK')]")
-        #precio con descuentos
-        #precios = driver.find_elements(By.XPATH, "//div[contains(@class, 'vtex-flex-layout-0-x-flexColChild--separator') and .//div[contains(text(), 'espacio')]]//div[contains(@class, 'jumboargentinaio-store-theme-1dCOMij_MzTzZOCohX1K7w')]")
-
-        for precio in precios:
-            precio_texto = precio.get_attribute("innerText")
-
-    except (NoSuchElementException,NoSuchWindowException) as e:
-            
-            titulos_precios.append((titulo,0))
-            print(titulo, 0)
-            continue
-
-    if precio_texto:
         try:
-
-            precio = re.search(r'(?<=\$)[\d,.]+', precio_texto)
-            precio = precio.group().replace('.','').replace(',','.')
-            precio = float(precio)
-
-    
-            print(titulo,precio)
-            titulos_precios.append((titulo,precio))
+            # Obtener el titulo
+            titulo = driver.find_element(By.XPATH, "//h1[@class='vtex-store-components-3-x-productNameContainer mv0 t-heading-4']/span[@class='vtex-store-components-3-x-productBrand ']").text.strip()
+        except NoSuchElementException:
+            print("No se encontro el Titulo en la página")
+            titulos_precios.append(("Producto X", 0))
             continue
-        except Exception as e:
-            titulos_precios.append((titulo,0))
-            print(titulo, 0)
-            continue
+        try:
+            #Obtener el precio
+            #precio de lista
+            precios = driver.find_elements(By.XPATH, "//div[contains(@class, 'vtex-flex-layout-0-x-flexColChild--separator') and .//div[contains(text(), 'espacio')]]//span[contains(@class, 'jumboargentinaio-store-theme-1QiyQadHj-1_x9js9EXUYK')]")
+            #precio con descuentos
+            #precios = driver.find_elements(By.XPATH, "//div[contains(@class, 'vtex-flex-layout-0-x-flexColChild--separator') and .//div[contains(text(), 'espacio')]]//div[contains(@class, 'jumboargentinaio-store-theme-1dCOMij_MzTzZOCohX1K7w')]")
+
+            for precio in precios:
+                precio_texto = precio.get_attribute("innerText")
+
+        except (NoSuchElementException,NoSuchWindowException) as e:
+                
+                titulos_precios.append((titulo,0))
+                print(titulo, 0)
+                continue
+
+        if precio_texto:
+            #Si encuentra precios por el primer XPATH de precios
+            try:
+
+                precio = re.search(r'(?<=\$)[\d,.]+', precio_texto)
+                precio = precio.group().replace('.','').replace(',','.')
+                precio = float(precio)
+
+        
+                print(titulo,precio)
+                titulos_precios.append((titulo,precio))
+                continue
+            except Exception as e:
+                titulos_precios.append((titulo,0))
+                print(titulo, 0)
+                continue
 
 
 
