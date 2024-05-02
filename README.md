@@ -1,5 +1,4 @@
-Este bot sencillo sirve para obtener el precio de un producto (PRECIO DE LISTA) de la página de Jumbo y lo almacena en un excel. No toma el precio de lista. Si prefieren el de lista tienen que cambiar el xpath (esta todo en jumbo.py)
-
+Este bot sencillo sirve para obtener el precio de un producto (PRECIO DE LISTA) de la página de Jumbo y lo almacena en un excel. 
 
 descargar librerias pandas, selenium, datetime, openpyxl, re, xlwings , time
 descargar driver de chrome. https://chromedriver.chromium.org/downloads
