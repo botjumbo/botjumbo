@@ -10,6 +10,8 @@ import openpyxl
 import xlwings as xw
 import re
 import time
+
+
 fecha_actual = datetime.now().strftime('%d-%m-%Y')
 
 
@@ -17,7 +19,7 @@ urls = [
     "https://www.jumbo.com.ar/pan-de-viena-la-panerita-x-6-un/p",
     "https://www.jumbo.com.ar/galletitas-minipolvorita-vainilla-frutilla-152g/p",
     "https://www.jumbo.com.ar/galletitas-de-agua-traviata-303-gr/p",
-    "https://www.jumbo.com.ar/harina-integral-100pureza-1-kg/p",
+    "https://www.jumbo.com.ar/harina-canuelas-ultra-refinada-vitamina-d-1kg/p",
     "https://www.jumbo.com.ar/almidon-de-maiz-sin-tacc-maizena-x-500-gr/p",
     "https://www.jumbo.com.ar/arroz-gallo-parboil-selec-x500g/p",
     "https://www.jumbo.com.ar/fideos-lucchetti-tallarin-n5-x500g/p",
@@ -29,10 +31,10 @@ urls = [
     "https://www.jumbo.com.ar/milanesa-nalga-2/p",
     "https://www.jumbo.com.ar/higado-congelado/p",
     "https://www.jumbo.com.ar/pechito-de-cerdo-fresco-3/p",
-    "https://www.jumbo.com.ar/pollo-con-menudos-congelado/p",
+    "https://www.jumbo.com.ar/pollo-fresco-con-menudos-2/p",
     "https://www.jumbo.com.ar/milanesas-de-merluza-cuisine-y-co-rebozadas-500-gr/p",
     "https://www.jumbo.com.ar/mortadela-paladini-familiar-500-gr/p",
-    "https://www.jumbo.com.ar/bife-de-paleta-de-cerdo-fresco-2/p",
+    "https://www.jumbo.com.ar/jamon-cocido-tripack-kg-1-sob-minimo-800-gr-mayorista/p",
     "https://www.jumbo.com.ar/salchichon-calchaqui-2/p",
     "https://www.jumbo.com.ar/salame-milan-tripack-por-kg-minimo-800-gr-mayorista/p",
     "https://www.jumbo.com.ar/aceite-canuelas-de-girasol-1-5-l/p",
@@ -42,7 +44,7 @@ urls = [
     "https://www.jumbo.com.ar/queso-crema-clasico-tregar-280g/p",
     "https://www.jumbo.com.ar/queso-cremoso-punta-del-agua-horma-x-kg-2/p",
     "https://www.jumbo.com.ar/queso-reggianito-rallado-la-serenisima-175gr/p",
-    "https://www.jumbo.com.ar/manteca-primer-premio-2/p",
+    "https://www.jumbo.com.ar/margarina-margadan-vegetal-200g/p",
     "https://www.jumbo.com.ar/yogur-entero-la-serenisima-clasico-frutilla-900g/p",
     "https://www.jumbo.com.ar/dulce-de-leche-la-serenisima-colonial-400-g/p",
     "https://www.jumbo.com.ar/huevos-blancos-maxima-30-u/p",
@@ -52,12 +54,12 @@ urls = [
     "https://www.jumbo.com.ar/banana-ecuador-por-kg/p",
     "https://www.jumbo.com.ar/pera-por-kg/p",
     "https://www.jumbo.com.ar/batata-por-kg/p",
-    "https://www.jumbo.com.ar/papa-fraccionada-por-kg/p",
-    "https://www.jumbo.com.ar/acelga-green-life-550-gr/p",
+    "https://www.jumbo.com.ar/papa-negra-por-kg/p",
+    "https://www.jumbo.com.ar/acelga-por-u/p",
     "https://www.jumbo.com.ar/cebolla-superior-por-kg/p",
     "https://www.jumbo.com.ar/choclo-x-unidad/p",
     "https://www.jumbo.com.ar/lechuga-capuchina-por-kg/p",
-    "https://www.jumbo.com.ar/tomate-redondo-grande-por-kg/p",
+    "https://www.jumbo.com.ar/tomate-perita-por-kg/p",
     "https://www.jumbo.com.ar/zanahoria-organica-fraccionada/p",
     "https://www.jumbo.com.ar/zapallo-coreano-por-kg/p",
     "https://www.jumbo.com.ar/tomate-perita-en-lata-arcor-400-gr/p",
@@ -73,16 +75,16 @@ urls = [
     "https://www.jumbo.com.ar/gaseosa-coca-cola-sabor-original-2-25-l/p",
     "https://www.jumbo.com.ar/jugo-en-polvo-clight-naranja-dulce-7-5-g/p",
     "https://www.jumbo.com.ar/soda-sifon-saldan-2-l/p",
-    "https://www.jumbo.com.ar/cerveza-quilmes-clasica-retornable-1-l/p",
+    "https://www.jumbo.com.ar/cerveza-quilmes-clasica-1lt-ret/p",
     "https://www.jumbo.com.ar/vino-tinto-vinas-de-balbo-borgona-1-125-cc/p",
     "https://www.jumbo.com.ar/cafe-dolca-suave-nescafe-170-gr-3/p",
-    "https://www.jumbo.com.ar/yerba-mate-suave-playadito-500-gr/p",
+    "https://www.jumbo.com.ar/yerba-mate-playadito-suave-1-kg/p",
     "https://www.jumbo.com.ar/te-naturalidad-intacta-la-virginia-50-saquitos/p"
 ]
 
 titulos_precios = []
-workbook = openpyxl.load_workbook("DatosJumbo.xlsx")
-sheet = workbook["Diaria"]
+workbook = openpyxl.load_workbook("DatosJumbo.xlsx")  #Crear antes el libro excel con nombre DatosJumbo
+sheet = workbook["Diaria"]  #Crear una hoja con nombre Diaria
 
 fila_vacia = 1
 columna = 2 
@@ -90,10 +92,10 @@ fila_titulos = 1
 columna_titulos = 2
 
 # Especifica la ruta del perfil de Chrome personalizado
-profile_directory = 'C:\\Users\\"TuUsuario\\AppData\\Local\\Google\\Chrome\\User Data\\'
+profile_directory = 'C:\\Users\\TUUSUARIO\\AppData\\Local\\Google\\Chrome\\User Data\\'  #Donde dice TUUSUARIO modificar por el nombre de tu PC 
 
 # Configurar el driver de Selenium con el perfil personalizado
-options = webdriver.ChromeOptions()
+options = webdriver.ChromeOptions()  #tener descargado el driver de chrome
 options.add_argument(f"user-data-dir={profile_directory}")
 service = Service()
 driver = webdriver.Chrome(service=service, options=options)
@@ -175,7 +177,7 @@ for  titulo, _ in titulos_precios:
 
 
 
-# Guardar el libro de trabajo datos
+# Guardar el libro de trabajo
 workbook.save("DatosJumbo.xlsx") 
 ############################
 
@@ -185,3 +187,6 @@ workbook.save("DatosJumbo.xlsx")
 #https://www.jumbo.com.ar/margarina-vegetal-danica-200g/p
 #https://www.jumbo.com.ar/vino-toro-clasico-tinto-1125cc/p
 #https://www.jumbo.com.ar/osobuco-de-novillo/p
+#https://www.jumbo.com.ar/queso-crema-la-paulina-tradicional-290-gr/p
+#https://www.jumbo.com.ar/margarina-margadan-vegetal-200g/p
+#https://www.jumbo.com.ar/papa-fraccionada-por-kg/p
