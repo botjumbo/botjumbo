@@ -1,11 +1,14 @@
 Este bot sencillo sirve para obtener el precio de un producto (PRECIO DE LISTA) de la página de Jumbo y lo almacena en un excel. 
 
 descargar librerias pandas, selenium, datetime, openpyxl, re, xlwings , time
-descargar driver de chrome. https://chromedriver.chromium.org/downloads
 
+descargar driver de chrome. https://chromedriver.chromium.org/downloads (opcional si no queres usar el acceso directo de tu chrome)
 
-https://www.indec.gob.ar/ftp/cuadros/sociedad/EPH_metodologia_22_pobreza.pdf para ver como mide indec y ponderar en base a consumo 
-De todas maneras, subi un archivo indec.md para que vean como pondera cada producto (se mide por gr o ml al mes por región) 
+Metodologia ↓
+
+https://www.indec.gob.ar/ftp/cuadros/economia/metodologia_ipc_nacional_2019.pdf (Vigente, base Dic2016)
+
+En jumbo.py agregar links y modificar ruta de chrome.
 
 
 
